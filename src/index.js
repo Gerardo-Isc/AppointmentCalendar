@@ -1,22 +1,35 @@
-const { app, BrowserWindow } = require("electron"); // Importando a Electron
+// Modules
+const { app, BrowserWindow, screen } = require("electron"); // Importando a Electron
+const path = require("path");
+
+// Menu
+const { setMainMenu } = require("./logic/menu.js");
 
 /**
  * Create a new Browsaer Window
  */
 const createWindow = () => {
+  // Obteniendo el tamaño de la pantalla para inicializar la ventana
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
   // Creado una nueva instancia de BrowserWindow
   // para crear una ventana
   const mainwin = new BrowserWindow({
-    width: 800, // Ancho
-    height: 600, // Alto
+    // fullscreen: true,
+    // fullscreenable: true,
+    // simpleFullscreen: true,
+    width: width - 50, // Ancho
+    height: height, // Alto
     minWidth: 400, // Minimo de Ancho
     minHeight: 400, // Minumo de Alto
-    // webPreferences: {
-    //   preload: path.join(__dirname, "preload.js"),
-    // },
+    webPreferences: {
+      preload: path.join(__dirname, "logic", "preload.js"),
+    },
   });
 
-  mainwin.loadFile("index.html");
+  setMainMenu(mainwin);
+
+  mainwin.loadFile("./src/views/index.html");
 };
 
 // Eventos
@@ -24,8 +37,4 @@ app.whenReady().then(() => {
   createWindow();
 });
 
-// setMainMenu(mainwin);
 // app.on("open-file").then(() => {});
-
-// const { setMainMenu } = require("./menu.js");
-// const path = require("path");
